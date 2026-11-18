@@ -1,0 +1,11 @@
+{"key":"PAY-142","fields":{"summary":"Return 404 when the invoice id is unknown","issuetype":{"name":"Bug"},"status":{"name":"To Do"},"priority":{"name":"High"},"labels":["billing"],"components":[{"name":"invoices-api"}],
+"description":{"type":"doc","version":1,"content":[
+{"type":"paragraph","content":[{"type":"text","text":"GET /invoices/:id currently throws a 500 when the id does not exist, because getInvoice() dereferences a null row in src/billing/invoices.ts. Clients retry on 500, which floods the API. This sample issue is hand-written for Groundwork's tests."}]},
+{"type":"heading","attrs":{"level":3},"content":[{"type":"text","text":"Steps to reproduce"}]},
+{"type":"orderedList","content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"Call GET /invoices/does-not-exist"}]}]}]},
+{"type":"paragraph","content":[{"type":"text","text":"Expected: 404 with error code INVOICE_NOT_FOUND. Actual: 500."}]},
+{"type":"heading","attrs":{"level":3},"content":[{"type":"text","text":"Acceptance criteria"}]},
+{"type":"bulletList","content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"Unknown id returns 404 and INVOICE_NOT_FOUND"}]}]},{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","text":"A test in src/billing/invoices.test.ts covers it"}]}]}]}
+]},
+"issuelinks":[{"type":{"inward":"is caused by","outward":"causes"},"inwardIssue":{"key":"PAY-120","fields":{"summary":"Move invoices to the new ORM","status":{"name":"Done"}}}}],
+"comment":{"comments":[{"author":{"displayName":"Asha"},"created":"2026-11-18T10:00:00.000+0530","body":{"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"type":"text","text":"Agreed with the API guild: keep the error shape { code, message }."}]}]}}]}}}

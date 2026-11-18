@@ -1,0 +1,80 @@
+modules:
+  jira:issuePanel:
+    - key: groundwork-panel
+      resource: panel
+      resolver:
+        function: panel-resolver
+      render: native
+      title: Groundwork
+      icon: resource:static;icon.svg
+  rovo:agent:
+    - key: groundwork-agent
+      name: Groundwork
+      description: Checks whether a Jira issue is ready for an AI coding agent and writes the handoff brief.
+      prompt: resource:prompts;agent.md
+      conversationStarters:
+        - Is this issue ready for a coding agent?
+        - Write the agent brief for this issue
+        - What is missing before we hand this off?
+      actions:
+        - check-readiness
+        - get-agent-brief
+        - post-agent-handoff
+  action:
+    - key: check-readiness
+      name: Check agent readiness
+      function: check-readiness-fn
+      actionVerb: GET
+      description: Runs Groundwork's readiness checks on a Jira issue and returns the verdict and the failing checks with fixes.
+      inputs:
+        issueKey:
+          title: Issue key
+          type: string
+          required: true
+          description: The Jira issue key, for example PAY-142.
+    - key: get-agent-brief
+      name: Get agent brief
+      function: get-brief-fn
+      actionVerb: GET
+      description: Returns a markdown brief of a Jira issue that an AI coding agent can act on.
+      inputs:
+        issueKey:
+          title: Issue key
+          type: string
+          required: true
+          description: The Jira issue key, for example PAY-142.
+    - key: post-agent-handoff
+      name: Post agent handoff
+      function: handoff-fn
+      actionVerb: CREATE
+      description: Posts the agent brief as a comment on the Jira issue and adds the agent-ready label. Refuses when the issue is not ready.
+      inputs:
+        issueKey:
+          title: Issue key
+          type: string
+          required: true
+          description: The Jira issue key, for example PAY-142.
+  function:
+    - key: panel-resolver
+      handler: index.panelHandler
+    - key: check-readiness-fn
+      handler: index.checkReadiness
+    - key: get-brief-fn
+      handler: index.getBrief
+    - key: handoff-fn
+      handler: index.handoff
+resources:
+  - key: panel
+    path: src/frontend/index.jsx
+  - key: prompts
+    path: prompts
+  - key: static
+    path: static
+permissions:
+  scopes:
+    - read:jira-work
+    - write:jira-work
+app:
+  runtime:
+    name: nodejs22.x
+  id: ari:cloud:ecosystem::app/REPLACE-WITH-forge-register

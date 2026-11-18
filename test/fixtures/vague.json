@@ -1,0 +1,4 @@
+{"key":"PAY-150","fields":{"summary":"Fix invoices","issuetype":{"name":"Task"},"status":{"name":"To Do"},"labels":[],"components":[],
+"description":{"type":"doc","version":1,"content":[{"type":"paragraph","content":[{"type":"text","text":"Invoices are weird sometimes."}]}]},
+"issuelinks":[{"type":{"inward":"is blocked by","outward":"blocks"},"inwardIssue":{"key":"PAY-149","fields":{"summary":"Decide currency rounding","status":{"name":"In Progress"}}}}],
+"comment":{"comments":[{"author":{"displayName":"Ravi"},"body":"Which customers see this?"}]}}}
