@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Groundwork for Jira: get issues ready for AI coding agents</title>
+<meta name="description" content="A Forge app that checks whether a Jira issue is ready for an AI coding agent and hands off a clean brief.">
+<link rel="icon" href="static/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0b0f;--panel:#111318;--line:#1f232c;--text:#e8eaf0;--mute:#8b93a7;--accent:#7c9cff;--ok:#3ddc97;--warn:#f5b454;--bad:#ff6b6b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.brand{display:flex;gap:10px;align-items:center;font-weight:600}.brand img{width:22px}
+nav .links a{color:var(--mute);text-decoration:none;margin-left:22px;font-size:14px}nav .links a:hover{color:var(--text)}
+.hero{padding:96px 0 56px;text-align:left}
+.pill{display:inline-block;font:500 12px Geist Mono,monospace;color:var(--accent);border:1px solid #2a3350;background:#121a33;padding:4px 10px;border-radius:999px}
+h1{font-size:clamp(36px,6vw,60px);line-height:1.05;letter-spacing:-.03em;margin:20px 0 18px;max-width:820px}
+h1 span{color:var(--mute)}
+.sub{color:var(--mute);font-size:18px;max-width:640px}
+.cta{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:500;font-size:14px;border:1px solid var(--line)}
+.btn.primary{background:var(--text);color:#0a0b0f;border-color:var(--text)}
+section{padding:56px 0;border-top:1px solid var(--line)}
+h2{font-size:28px;letter-spacing:-.02em;margin:0 0 8px}.lead{color:var(--mute);margin:0 0 28px}
+.demo{display:grid;grid-template-columns:1fr 1.2fr;gap:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+.tabs{display:flex;gap:8px;margin-bottom:16px}.tab{font:500 13px Geist;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:none;color:var(--mute);cursor:pointer}
+.tab.on{color:var(--text);background:#1a1e27;border-color:#2b3140}
+.issue h3{margin:0 0 4px;font-size:17px}.meta{font:12px Geist Mono;color:var(--mute);margin-bottom:12px}
+.issue pre{white-space:pre-wrap;font:13px/1.55 Geist;color:#c5cad6;margin:0;max-height:300px;overflow:auto}
+.verdict{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.loz{font:600 11px Geist Mono;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:4px}
+.ready{background:#0f2a20;color:var(--ok)}.needs-work{background:#2e2410;color:var(--warn)}.not-ready{background:#311416;color:var(--bad)}
+.bar{height:6px;background:#1a1e27;border-radius:99px;overflow:hidden;margin:6px 0 14px}.bar i{display:block;height:100%;background:var(--accent)}
+ul.checks{list-style:none;padding:0;margin:0 0 14px}ul.checks li{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+ul.checks .i{width:16px;flex:none;font-weight:700}.p{color:var(--ok)}.f{color:var(--bad)}.fix{display:block;color:var(--mute);font-size:13px}
+.brief{font:12.5px/1.55 Geist Mono,monospace;background:#0b0d12;border:1px solid var(--line);border-radius:8px;padding:14px;white-space:pre-wrap;max-height:340px;overflow:auto;color:#cfd5e3}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.grid3 .card h4{margin:0 0 6px;font-size:15px}.grid3 p{margin:0;color:var(--mute);font-size:14px}
+code{font:13px Geist Mono}.k{color:var(--accent)}
+footer{padding:32px 0;color:var(--mute);font-size:13px;border-top:1px solid var(--line)}
+.note{font-size:13px;color:var(--mute);margin-top:10px}
+@media(max-width:860px){.demo,.grid3{grid-template-columns:1fr}.hero{padding:64px 0 40px}nav .links a:not(.gh){display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav><div class="brand"><img src="static/icon.svg" alt="">Groundwork</div><div class="links"><a href="#demo">Demo</a><a href="#how">How it works</a><a class="gh" href="https://github.com/Shine-5705/groundwork">GitHub</a></div></nav>
+<header class="hero">
+<span class="pill">Forge app for Jira · Rovo agent · Codegeist 2026</span>
+<h1>Hand off issues to coding agents. <span>Only when they're ready.</span></h1>
+<p class="sub">A vague ticket gives you a confident, wrong pull request. Groundwork checks each Jira issue against seven explainable checks, tells the reporter what to fix, and writes the brief your agent needs.</p>
+<div class="cta"><a class="btn primary" href="#demo">Try it on a sample issue</a><a class="btn" href="https://github.com/Shine-5705/groundwork">View source</a></div>
+</header>
+</div>
+
+<section id="demo"><div class="wrap">
+<h2>Live engine</h2>
+<p class="lead">This runs the same <code>readiness()</code> and <code>buildBrief()</code> code the Forge app ships, in your browser. The two issues are hand-written samples.</p>
+<div class="tabs"><button class="tab on" data-f="ready">PAY-142 · well-written bug</button><button class="tab" data-f="vague">PAY-150 · vague task</button></div>
+<div class="demo">
+  <div class="card issue"><div class="meta" id="meta"></div><h3 id="title"></h3><pre id="desc"></pre></div>
+  <div class="card"><div class="verdict"><strong>Agent readiness</strong><span class="loz" id="loz"></span></div>
+    <div class="bar"><i id="bar"></i></div><div class="meta" id="score"></div>
+    <ul class="checks" id="checks"></ul>
+    <div class="brief" id="brief"></div>
+  </div>
+</div>
+</div></section>
+
+<section id="how"><div class="wrap">
+<h2>Where it lives in Atlassian</h2><p class="lead">Three Forge surfaces, one engine. Data never leaves Jira; calls run with the user's own permissions.</p>
+<div class="grid3">
+<div class="card"><h4>Issue panel</h4><p><code class="k">jira:issuePanel</code> in UI Kit. A verdict, every failing check with its fix, a brief preview and one-click <em>Hand off to agent</em>.</p></div>
+<div class="card"><h4>Rovo agent</h4><p><code class="k">rovo:agent</code>. Ask "Is this issue ready for a coding agent?" in Rovo chat and get the gaps in plain words.</p></div>
+<div class="card"><h4>Reusable actions</h4><p><code class="k">check-readiness</code>, <code class="k">get-agent-brief</code>, <code class="k">post-agent-handoff</code>. Any Rovo agent can call them as tools.</p></div>
+</div>
+<p class="note">Handoff refuses when acceptance criteria are missing or an open issue blocks the work. Groundwork never invents criteria, paths or decisions.</p>
+</div></section>
+<footer><div class="wrap">Groundwork by Shine Gupta (TheAdaply) · MIT · Built on Atlassian Forge for Codegeist 2026</div></footer>
+
+<script type="module">
+import { normaliseIssue, readiness, buildBrief } from './src/lib/brief.js';
+const $ = (id) => document.getElementById(id);
+async function show(name){
+  const raw = await (await fetch(`./test/fixtures/${name}.json`)).json();
+  const issue = normaliseIssue(raw), r = readiness(issue);
+  $('meta').textContent = `${issue.key} · ${issue.type} · ${issue.status}${issue.priority? ' · '+issue.priority:''}`;
+  $('title').textContent = issue.summary; $('desc').textContent = issue.description;
+  $('loz').textContent = r.verdict.replace('-',' '); $('loz').className = 'loz '+r.verdict;
+  $('bar').style.width = (100*r.passed/r.total)+'%'; $('score').textContent = `${r.passed} of ${r.total} checks pass`;
+  $('checks').innerHTML = r.checks.map(c=>`<li><span class="i ${c.pass?'p':'f'}">${c.pass?'✓':'✕'}</span><span>${c.label}${c.pass?'':`<span class="fix">${c.fix}</span>`}</span></li>`).join('');
+  $('brief').textContent = buildBrief(issue, r);
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');show(t.dataset.f)});
+show('ready');
+</script>
+</body></html>
